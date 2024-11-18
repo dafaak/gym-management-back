@@ -1,3 +1,3 @@
-import { GymModule } from './gym/gym.module';
+import { GymModule } from '../gym/gym.module';
 
 export const MODULES = [GymModule];

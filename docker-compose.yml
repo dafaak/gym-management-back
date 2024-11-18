@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-gym-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password  # Cambia esta contraseña
+      MYSQL_DATABASE: db         # Cambia el nombre de tu base de datos
+      MYSQL_USER: dev_user                 # Cambia el nombre de usuario
+      MYSQL_PASSWORD: dev_pass         # Cambia la contraseña del usuario
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql  # Persistencia de datos
+
+
+volumes:
+  mysql_data:  # Almacén persistente para los datos de la BDD
+

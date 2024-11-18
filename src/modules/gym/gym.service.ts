@@ -1,15 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { GymEntity } from './gym.entity';
+import { Gym } from './gym.entity';
 
 @Injectable()
 export class GymService {
   constructor(
     @Inject('GYM_REPOSITORY')
-    private gymRepository: Repository<GymEntity>,
+    private gymRepository: Repository<Gym>,
   ) {}
 
-  async findAll(): Promise<GymEntity[]> {
+  async findAll(): Promise<Gym[]> {
     return this.gymRepository.find();
   }
 }

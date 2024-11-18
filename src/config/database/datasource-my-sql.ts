@@ -1,9 +1,10 @@
 import { DataSource } from 'typeorm';
 import { envs } from '../envs';
-import { ENTITIES } from '../../modules/entities';
+import { ENTITIES } from '../../modules/const/entities';
+import { DATASOURCES } from './const/datasources';
 
 export const My_SQL_DATA_SOURCE = {
-  provide: 'DATA_SOURCE',
+  provide: DATASOURCES.mySql,
   useFactory: async () => {
     const dataSource = new DataSource({
       type: 'mysql',

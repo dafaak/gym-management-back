@@ -1,10 +1,12 @@
 import { DataSource } from 'typeorm';
-import { GymEntity } from './gym.entity';
+import { Gym } from './gym.entity';
+import { REPOSITORIES } from '../const/repositories';
+import { DATASOURCES } from '../../config/database/const/datasources';
 
 export const GYM_PROVIDERS = [
   {
-    provide: 'GYM_REPOSITORY',
-    useFactory: (dataSource: DataSource) => dataSource.getRepository(GymEntity),
-    inject: ['DATA_SOURCE'],
+    provide: REPOSITORIES.gym,
+    useFactory: (dataSource: DataSource) => dataSource.getRepository(Gym),
+    inject: [DATASOURCES.mySql],
   },
 ];

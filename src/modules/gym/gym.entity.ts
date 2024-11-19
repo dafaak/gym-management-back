@@ -14,7 +14,7 @@ export class Gym {
 
   @Column({
     type: 'varchar',
-    length: '15',
+    length: '20',
     nullable: false,
   })
   phone: string;

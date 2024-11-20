@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Branch } from '../branch/branch.entity';
 
 @Entity('gym')
 export class Gym {
@@ -25,4 +26,7 @@ export class Gym {
     nullable: true,
   })
   email?: string;
+
+  @OneToMany(() => Branch, (branch) => branch.gym)
+  branches: Branch[];
 }

@@ -4,7 +4,7 @@ import { Repository, UpdateResult } from 'typeorm';
 import { Gym } from './gym.entity';
 import { CreateGymDto } from './dto/create-gym.dto';
 import { REPOSITORIES } from '../const/repositories';
-import { BadRequestException, HttpException, Logger } from '@nestjs/common';
+import { BadRequestException, HttpException } from '@nestjs/common';
 import { UpdateGymDto } from './dto/update-gym.dto';
 
 describe('GymService', () => {

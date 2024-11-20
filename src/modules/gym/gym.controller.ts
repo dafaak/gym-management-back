@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -12,7 +13,6 @@ import { GymService } from './gym.service';
 import { CreateGymDto } from './dto/create-gym.dto';
 import { UpdateGymDto } from './dto/update-gym.dto';
 import { IdParamDto } from '../../common/dto/idParamDto';
-import { validate } from 'class-validator';
 
 @Controller('gym')
 export class GymController {
@@ -36,5 +36,10 @@ export class GymController {
     @Body() updateGymDto: UpdateGymDto,
   ) {
     return this.gymService.update(+params.id, updateGymDto);
+  }
+
+  @Delete(':id')
+  async delete(@Param() params: IdParamDto) {
+    return this.gymService.delete(params.id);
   }
 }

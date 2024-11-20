@@ -5,35 +5,34 @@ import {
   Inject,
   Injectable,
   Logger,
-  LoggerService,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { Gym } from './gym.entity';
-import { CreateGymDto } from './dto/create-gym.dto';
+import { Gym } from '../gym/gym.entity';
 import { REPOSITORIES } from '../const/repositories';
-import { UpdateGymDto } from './dto/update-gym.dto';
+import { Repository } from 'typeorm';
 import { ResponseMessageInterface } from '../../common/interface/response-message.interface';
+import { CreateBranchDto } from './dto/create-branch.dto';
+import { UpdateBranchDto } from './dto/update-branch.dto';
 
 @Injectable()
-export class GymService {
+export class BranchService {
   private readonly logger = new Logger();
 
   constructor(
-    @Inject(REPOSITORIES.gym)
-    private gymRepository: Repository<Gym>,
+    @Inject(REPOSITORIES.branch)
+    private branchRepository: Repository<Gym>,
   ) {}
 
   async findAll(): Promise<Gym[]> {
-    return this.gymRepository.find();
+    return this.branchRepository.find();
   }
 
-  async create(gym: CreateGymDto): Promise<ResponseMessageInterface> {
+  async create(branch: CreateBranchDto): Promise<ResponseMessageInterface> {
     try {
-      await this.gymRepository.save(gym);
+      await this.branchRepository.save(branch);
       return { message: 'CREATED', status: true };
     } catch (e) {
       this.logger.error(
-        `Error in create method: payload = ${JSON.stringify(gym)}`,
+        `Error in create method: payload = ${JSON.stringify(branch)}`,
         e.stack,
       );
 
@@ -45,23 +44,26 @@ export class GymService {
   }
 
   async update(
-    gymId: number,
-    gym: UpdateGymDto,
+    branchId: number,
+    branch: UpdateBranchDto,
   ): Promise<ResponseMessageInterface> {
     try {
-      const updateRes = await this.gymRepository.update({ id: gymId }, gym);
+      const updateRes = await this.branchRepository.update(
+        { id: branchId },
+        branch,
+      );
 
       if (updateRes.affected) {
         return { message: 'UPDATED', status: true };
       }
 
       throw new BadRequestException({
-        message: 'NO GYM FOUND WITH PROVIDED ID',
+        message: 'NO BRANCH FOUND WITH PROVIDED ID',
         status: false,
       });
     } catch (e) {
       this.logger.error(
-        `Error in update method: gymId = ${gymId}, payload = ${JSON.stringify(gym)}`,
+        `Error in update method: branchId = ${branchId}, payload = ${JSON.stringify(branch)}`,
         e.stack,
       );
 
@@ -74,20 +76,23 @@ export class GymService {
     }
   }
 
-  async delete(gymId: number): Promise<ResponseMessageInterface> {
+  async delete(branchId: number): Promise<ResponseMessageInterface> {
     try {
-      const deleteResult = await this.gymRepository.delete({ id: gymId });
+      const deleteResult = await this.branchRepository.delete({ id: branchId });
 
       if (deleteResult.affected) {
         return { message: 'Deleted', status: true };
       }
 
       throw new BadRequestException({
-        message: 'NO GYM FOUND WITH PROVIDED ID',
+        message: 'NO BRANCH FOUND WITH PROVIDED ID',
         status: false,
       });
     } catch (e) {
-      this.logger.error(`Error in delete method: gymId = ${gymId}}`, e.stack);
+      this.logger.error(
+        `Error in delete method: branchId = ${branchId}}`,
+        e.stack,
+      );
 
       if (e instanceof BadRequestException) throw e;
 

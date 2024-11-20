@@ -24,5 +24,5 @@ export class Gym {
     length: '100',
     nullable: true,
   })
-  email: string;
+  email?: string;
 }

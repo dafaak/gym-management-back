@@ -1,27 +1,26 @@
+import { Expose } from 'class-transformer';
 import {
   IsNotEmpty,
   IsOptional,
-  IsPhoneNumber,
   IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { Expose } from 'class-transformer';
 
-export class CreateGymDto {
+export class UpdateGymDto {
   @Expose()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MaxLength(100)
   @MinLength(2)
-  name: string;
+  name?: string;
 
   @Expose()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MaxLength(20)
   @MinLength(7)
-  phone: string;
+  phone?: string;
 
   @Expose()
   @IsOptional()

@@ -9,5 +9,6 @@ export const envs = {
   dbPort: env.get('DB_PORT').required(true).asPortNumber(),
   dbHost: env.get('DB_HOST').required(true).asString(),
   dbSync: env.get('DB_SYNC').required(true).asBool(),
+  dbDropSchema: env.get('DB_DROP_SCHEMA').required(true).asBool(),
   jwtSeed: env.get('JWT_SEED').required(true).asString(),
 };

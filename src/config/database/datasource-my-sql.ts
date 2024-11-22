@@ -15,6 +15,7 @@ export const My_SQL_DATA_SOURCE = {
       database: envs.dbName,
       entities: [...ENTITIES],
       synchronize: envs.dbSync,
+      dropSchema: envs.dbDropSchema,
     });
 
     return dataSource.initialize();

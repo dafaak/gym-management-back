@@ -6,10 +6,13 @@ import {
   Param,
   Post,
   Put,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
+import { IdParamDto } from '../../common/dto/idParamDto';
 
 @Controller('member')
 export class MemberController {
@@ -26,12 +29,13 @@ export class MemberController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateDto: UpdateMemberDto) {
-    return this.memberService.update(+id, updateDto);
+  @UsePipes(ValidationPipe)
+  update(@Param() params: IdParamDto, @Body() updateDto: UpdateMemberDto) {
+    return this.memberService.update(params.id, updateDto);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.memberService.delete(+id);
+  delete(@Param() params: IdParamDto) {
+    return this.memberService.delete(params.id);
   }
 }

@@ -26,7 +26,7 @@ export class CreateBranchDto {
   @Expose()
   @IsNotEmpty()
   @IsNumber()
-  gymId: number;
+  gym: number;
 
   @Expose()
   @IsOptional()

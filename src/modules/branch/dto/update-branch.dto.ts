@@ -1,6 +1,7 @@
 import { Expose } from 'class-transformer';
 import {
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   MaxLength,
@@ -13,14 +14,14 @@ export class UpdateBranchDto {
   @IsString()
   @MaxLength(100)
   @MinLength(2)
-  address: string;
+  address?: string;
 
   @Expose()
   @IsNotEmpty()
   @IsString()
   @MaxLength(20)
   @MinLength(7)
-  phone: string;
+  phone?: string;
 
   @Expose()
   @IsOptional()
@@ -34,4 +35,9 @@ export class UpdateBranchDto {
   @IsString()
   @MaxLength(100)
   long?: string;
+
+  @Expose()
+  @IsOptional()
+  @IsNumber()
+  branch?: number;
 }

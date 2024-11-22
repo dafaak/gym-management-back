@@ -1,5 +1,13 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Gym } from '../gym/gym.entity';
+import { BranchHours } from '../branch-hours/branch-hours.entity';
+import { Member } from '../member/member.entity';
 
 @Entity('branch')
 export class Branch {
@@ -34,6 +42,16 @@ export class Branch {
   })
   long?: string;
 
-  @ManyToOne(() => Gym, (gym) => gym.branches)
-  gym: Gym;
+  @OneToMany(() => BranchHours, (branchHours) => branchHours.branch, {
+    onDelete: 'CASCADE',
+  })
+  branchHours: BranchHours[];
+
+  @OneToMany(() => Member, (members) => members.branch)
+  members: Member[];
+
+  @ManyToOne(() => Gym, (gym) => gym.branches, {
+    nullable: false,
+  })
+  gym: Gym | number;
 }

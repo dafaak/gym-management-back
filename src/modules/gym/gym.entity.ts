@@ -27,6 +27,8 @@ export class Gym {
   })
   email?: string;
 
-  @OneToMany(() => Branch, (branch) => branch.gym)
+  @OneToMany(() => Branch, (branch) => branch.gym, {
+    onDelete: 'CASCADE',
+  })
   branches: Branch[];
 }

@@ -1,32 +1,39 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Gym } from '../gym/gym.entity';
 import { Branch } from '../branch/branch.entity';
 
-@Entity('branch_hours')
-export class BranchHours {
+@Entity('membership')
+export class Membership {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
     type: 'varchar',
     length: '100',
-    comment: `'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'`,
     nullable: false,
   })
-  dayOfTheWeek: string;
+  name: string;
 
   @Column({
-    type: 'time',
+    type: 'double',
     nullable: false,
   })
-  timeRangeStart: string;
+  price: number;
 
   @Column({
-    type: 'time',
+    type: 'int',
     nullable: false,
   })
-  timeRangeEnd?: string;
+  duration: number;
 
-  @ManyToOne(() => Branch, (branch) => branch.branchHours, {
+  @Column({
+    type: 'varchar',
+    length: '255',
+    nullable: true,
+  })
+  details?: string;
+
+  @ManyToOne(() => Branch, (branch) => branch.memberships, {
     onDelete: 'CASCADE',
     nullable: false,
   })

@@ -1,0 +1,23 @@
+entity: Membership
+items:
+  membership1:
+    name: "1 month"
+    price: 35
+    duration: 1
+    branch: "@branch1"
+  membership2:
+    name: "2 month"
+    price: 60
+    duration: 2
+    branch: "@branch1"
+  membership3:
+    name: "1 month"
+    price: 30
+    duration: 1
+    branch: "@branch2"
+  membership4:
+    name: "2 month"
+    price: 50
+    duration: 2
+    branch: "@branch2"
+

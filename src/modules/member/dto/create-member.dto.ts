@@ -10,12 +10,8 @@ import {
   MinLength,
 } from 'class-validator';
 import { MEMBERSHIP_STATUS } from '../../../common/const/membership-status';
-import { PrimaryGeneratedColumn } from 'typeorm';
 
 export class CreateMemberDto {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Expose()
   @IsNotEmpty()
   @IsString()

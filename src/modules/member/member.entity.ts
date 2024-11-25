@@ -67,6 +67,8 @@ export class Member {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Branch, (branch) => branch.members)
+  @ManyToOne(() => Branch, (branch) => branch.members, {
+    onDelete: 'CASCADE',
+  })
   branch: Branch | number;
 }

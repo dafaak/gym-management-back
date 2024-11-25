@@ -1,0 +1,12 @@
+entity: Branch
+items:
+  branch1:
+    address: "main street sw.123"
+    phone: "+593909878676"
+    email: "test1@mail.com"
+    gym: "@gym1"
+  branch2:
+    address: "main street sw.123"
+    phone: "+593938475844"
+    email: "test2@mail.com"
+    gym: "@gym1"

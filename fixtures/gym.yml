@@ -1,0 +1,6 @@
+entity: Gym
+items:
+  gym1:
+      name: "Gym A"
+      phone: "1234567890"
+      email: "test@mail.com"

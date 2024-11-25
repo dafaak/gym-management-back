@@ -1,0 +1,52 @@
+entity: BranchHours
+items:
+  branchHours1:
+    dayOfTheWeek: "Monday"
+    timeRangeStart: "05:30"
+    timeRangeEnd: "11:00"
+    branch: "@branch1"
+  branchHours2:
+    dayOfTheWeek: "Monday"
+    timeRangeStart: "16:00"
+    timeRangeEnd: "21:00"
+    branch: '@branch1'
+  branchHours3:
+    dayOfTheWeek: "Tuesday"
+    timeRangeStart: "05:30"
+    timeRangeEnd: "11:00"
+    branch: "@branch1"
+  branchHours4:
+    dayOfTheWeek: "Tuesday"
+    timeRangeStart: "16:00"
+    timeRangeEnd: "21:00"
+    branch: "@branch1"
+  branchHours5:
+    dayOfTheWeek: "Saturday"
+    timeRangeStart: "08:00"
+    timeRangeEnd: "11:00"
+    branch: "@branch1"
+  branchHours6:
+    dayOfTheWeek: "Monday"
+    timeRangeStart: "05:30"
+    timeRangeEnd: "11:00"
+    branch: "@branch2"
+  branchHours7:
+    dayOfTheWeek: "Monday"
+    timeRangeStart: "16:00"
+    timeRangeEnd: "21:00"
+    branch: "@branch2"
+  branchHours8:
+    dayOfTheWeek: "Tuesday"
+    timeRangeStart: "05:30"
+    timeRangeEnd: "11:00"
+    branch: "@branch2"
+  branchHours9:
+    dayOfTheWeek: "Tuesday"
+    timeRangeStart: "16:00"
+    timeRangeEnd: "21:00"
+    branch: "@branch2"
+  branchHours10:
+    dayOfTheWeek: "Saturday"
+    timeRangeStart: "08:00"
+    timeRangeEnd: "11:00"
+    branch: "@branch2"

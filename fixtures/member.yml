@@ -1,0 +1,16 @@
+entity: Member
+items:
+  member1:
+    ci: "1724040590"
+    firstName: "John"
+    lastName: "Doe"
+    dateOfBirth: "1990-05-20"
+    phone: "5551234567"
+    branch: "@branch1"
+  member2:
+    ci: "1725050690"
+    firstName: "Jane"
+    lastName: "Smith"
+    dateOfBirth: "1985-10-10"
+    phone: "5557654321"
+    branch: "@branch2"

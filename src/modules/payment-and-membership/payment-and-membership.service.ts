@@ -16,6 +16,8 @@ import { ResponseMessageInterface } from '../../common/interface/response-messag
 import { addMonthsToDate, isDateInRange } from '../../common/utils/functions';
 import { dataSourceMySql } from '../../config/database/datasource-mysql';
 
+import { Membership } from '../membership/membership.entity';
+
 @Injectable()
 export class PaymentAndMembershipService {
   protected readonly logger = new Logger();
@@ -27,34 +29,45 @@ export class PaymentAndMembershipService {
   ) {}
 
   async create(createDto: CreatePaymentDto): Promise<ResponseMessageInterface> {
+    const queryRunner = dataSourceMySql.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
     try {
       // consultar si existe la membership
-      const membershipFound = await this.membershipService.findByParams({
-        id: createDto.membership_id,
-        branchId: createDto.branch_id,
-        active: MEMBERSHIP_STATUS.active,
-      });
+      const membershipFound = (await queryRunner.manager.findOne(Membership, {
+        where: {
+          id: createDto.membership_id,
+          branch: createDto.branch_id,
+          active: MEMBERSHIP_STATUS.active,
+        },
+      })) as Membership;
 
-      if (membershipFound.length === 0) {
+      if (!membershipFound) {
         throw new BadRequestException('MEMBERSHIP NOT FOUND');
       }
 
       // consultar si el miembro ya tiene una membresia
-      const memberMembershipFound =
-        await this.memberMembershipService.findByParams({
-          memberId: createDto.member_id,
-        });
+      const memberMembershipFound = (await queryRunner.manager.findOne(
+        MemberMembership,
+        {
+          where: {
+            member: createDto.member_id,
+          },
+        },
+      )) as MemberMembership;
 
-      if (memberMembershipFound.length === 1) {
+      if (memberMembershipFound) {
         const isMembershipActive = this.isMembershipActive(
-          memberMembershipFound[0],
+          memberMembershipFound,
         );
 
         // si la membresia aun esta vigente o es un pago atrasado
         // entonces calcular la nueva fechas de fin
         //actualizar el registro
         if (isMembershipActive || createDto.late_payment) {
-          const endDate = dayjs(memberMembershipFound[0].endDate);
+          const endDate = dayjs(memberMembershipFound.endDate);
           const endOfMonth = endDate.endOf('month');
 
           let adjustMonth = false;
@@ -62,14 +75,12 @@ export class PaymentAndMembershipService {
           if (endDate.format('YYYY-MM-DD') === endOfMonth.format('YYYY-MM-DD'))
             adjustMonth = true;
 
-          let newEndDate = addMonthsToDate(
-            endDate,
-            membershipFound[0].duration,
-          );
+          let newEndDate = addMonthsToDate(endDate, membershipFound.duration);
 
           if (adjustMonth) newEndDate = newEndDate.endOf('month');
-          await this.memberMembershipService.update(
-            memberMembershipFound[0].id,
+          await queryRunner.manager.update(
+            MemberMembership,
+            memberMembershipFound.id,
             {
               endDate: newEndDate.format('YYYY-MM-DD'),
             },
@@ -84,10 +95,11 @@ export class PaymentAndMembershipService {
           const startDate = dayjs();
           const newEndDate = addMonthsToDate(
             startDate,
-            membershipFound[0].duration,
+            membershipFound.duration,
           );
-          await this.memberMembershipService.update(
-            memberMembershipFound[0].id,
+          await queryRunner.manager.update(
+            MemberMembership,
+            memberMembershipFound.id,
             {
               startDate: startDate.format('YYYY-MM-DD'),
               endDate: newEndDate.format('YYYY-MM-DD'),
@@ -97,34 +109,36 @@ export class PaymentAndMembershipService {
       }
 
       // si no tiene membresia creada
-      if (memberMembershipFound.length === 0) {
+      if (!memberMembershipFound) {
         // entonces fecha de inicio es la actual y calcular la fecha fin
         // crear el registro
         const startDate = dayjs();
-        const endDate = startDate.add(membershipFound[0].duration, 'month');
-        await this.memberMembershipService.create({
+        const endDate = startDate.add(membershipFound.duration, 'month');
+        await queryRunner.manager.create(MemberMembership, {
           startDate: startDate.format('YYYY-MM-DD'),
           endDate: endDate.format('YYYY-MM-DD'),
           member: createDto.member_id,
         });
       }
-      this.logger.log(
-        `Membership updated with params: ${JSON.stringify(createDto)}`,
-      );
 
       await this.paymentService.create(createDto);
+
+      await queryRunner.commitTransaction();
 
       return {
         message: 'PAYMENT REGISTERED',
         status: true,
       };
     } catch (e) {
+      await queryRunner.rollbackTransaction();
       if (e instanceof BadRequestException) throw e;
 
       throw new HttpException(
         { message: e.message || 'INTERNAL SERVER ERROR', status: false },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+    } finally {
+      await queryRunner.release();
     }
   }
 

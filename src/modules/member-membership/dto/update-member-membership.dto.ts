@@ -5,10 +5,10 @@ export class UpdateMemberMembershipDto {
   @Expose()
   @IsOptional()
   @IsDateString()
-  startDate: Date;
+  startDate?: string;
 
   @Expose()
   @IsOptional()
   @IsDateString()
-  endDate: Date;
+  endDate?: string;
 }

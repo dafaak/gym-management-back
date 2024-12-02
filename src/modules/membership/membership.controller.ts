@@ -23,7 +23,7 @@ export class MembershipController {
   @Get()
   find(@Query() searchParams: SearchMembershipDto) {
     console.log(searchParams);
-    return this.membershipService.find(searchParams);
+    return this.membershipService.findByParams(searchParams);
   }
 
   @Post()

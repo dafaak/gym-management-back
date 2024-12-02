@@ -1,20 +1,41 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { Payment } from './payment.interface';
 import { Model } from 'mongoose';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { SearchPaymentDto } from './dto/search-payment.dto';
 import { MODELS } from '../const/models';
+import { ResponseMessageInterface } from '../../common/interface/response-message.interface';
 
 @Injectable()
 export class PaymentService {
+  protected readonly logger = new Logger();
+
   constructor(
     @Inject(MODELS.payment)
     private paymentModel: Model<Payment>,
   ) {}
 
-  async create(createDto: CreatePaymentDto) {
-    const createdPayment = new this.paymentModel(createDto);
-    return createdPayment.save();
+  async create(createDto: CreatePaymentDto): Promise<ResponseMessageInterface> {
+    try {
+      const createdPayment = new this.paymentModel(createDto);
+      await createdPayment.save();
+      return { message: 'PAYMENT CREATED', status: true };
+    } catch (e) {
+      this.logger.error(
+        `Error in create method: payload = ${JSON.stringify(createDto)}`,
+        e.stack,
+      );
+      throw new HttpException(
+        { message: e.message || 'INTERNAL SERVER ERROR', status: false },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async getPaymentsByMemberAndDateRange(searchParams: SearchPaymentDto) {

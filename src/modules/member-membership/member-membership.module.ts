@@ -8,5 +8,6 @@ import { DatabaseModule } from '../../config/database/database.module';
   imports: [DatabaseModule],
   providers: [MemberMembershipService, ...MEMBER_MEMBERSHIP_PROVIDERS],
   controllers: [MemberMembershipController],
+  exports: [MemberMembershipService],
 })
 export class MemberMembershipModule {}

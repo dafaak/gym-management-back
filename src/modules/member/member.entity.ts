@@ -65,7 +65,7 @@ export class Member {
 
   @OneToOne(() => MemberMembership)
   @JoinColumn()
-  memberMembership: MemberMembership;
+  memberMembership: MemberMembership | number;
 
   @ManyToOne(() => Branch, (branch) => branch.members, {
     onDelete: 'CASCADE',

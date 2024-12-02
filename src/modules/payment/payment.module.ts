@@ -8,5 +8,6 @@ import { DatabaseModule } from '../../config/database/database.module';
   imports: [DatabaseModule],
   providers: [PaymentService, ...PAYMENT_PROVIDERS],
   controllers: [PaymentController],
+  exports: [PaymentService],
 })
 export class PaymentModule {}

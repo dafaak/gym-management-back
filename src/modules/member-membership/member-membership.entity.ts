@@ -16,11 +16,14 @@ export class MemberMembership {
     type: 'date',
     nullable: false,
   })
-  startDate: Date;
+  startDate: string;
 
   @Column({
     type: 'date',
     nullable: false,
   })
-  endDate: Date;
+  endDate: string;
+
+  @OneToOne(() => Member, (member) => member.memberMembership)
+  member: Member | number;
 }

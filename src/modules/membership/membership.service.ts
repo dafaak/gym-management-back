@@ -20,7 +20,7 @@ export class MembershipService extends CommonService<
     super(membershipRepository);
   }
 
-  async find(searchParams: SearchMembershipDto) {
+  async findByParams(searchParams: SearchMembershipDto) {
     const qb = this.membershipRepository.createQueryBuilder('membership');
     if (searchParams.id) {
       qb.andWhere('(membership.id=:id)', { id: searchParams.id });

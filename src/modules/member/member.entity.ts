@@ -2,11 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Branch } from '../branch/branch.entity';
+import { MemberMembership } from '../member-membership/member-membership.entity';
 
 @Entity('member')
 export class Member {
@@ -38,7 +41,7 @@ export class Member {
     type: 'date',
     nullable: false,
   })
-  dateOfBirth: string;
+  dateOfBirth: Date;
 
   @Column({
     type: 'varchar',
@@ -46,13 +49,6 @@ export class Member {
     nullable: false,
   })
   phone: string;
-
-  @Column({
-    type: 'tinyint',
-    nullable: false,
-    default: 0,
-  })
-  membershipStatus: number;
 
   @Column({
     type: 'varchar',
@@ -66,6 +62,10 @@ export class Member {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToOne(() => MemberMembership)
+  @JoinColumn()
+  memberMembership: MemberMembership;
 
   @ManyToOne(() => Branch, (branch) => branch.members, {
     onDelete: 'CASCADE',

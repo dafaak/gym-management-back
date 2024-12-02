@@ -47,12 +47,6 @@ export class CreateMemberDto {
 
   @Expose()
   @IsOptional()
-  @IsIn([MEMBERSHIP_STATUS.active, MEMBERSHIP_STATUS.unactive])
-  @IsNumber()
-  membershipStatus?: MEMBERSHIP_STATUS;
-
-  @Expose()
-  @IsOptional()
   @IsString()
   @MaxLength(100)
   email?: string;

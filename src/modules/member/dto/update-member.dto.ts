@@ -29,7 +29,7 @@ export class UpdateMemberDto {
   @Expose()
   @IsOptional()
   @IsDateString()
-  dateOfBirth?: string;
+  dateOfBirth?: Date;
 
   @Expose()
   @IsOptional()
@@ -37,12 +37,6 @@ export class UpdateMemberDto {
   @MaxLength(20)
   @MinLength(7)
   phone?: string;
-
-  @Expose()
-  @IsOptional()
-  @IsIn([MEMBERSHIP_STATUS.active, MEMBERSHIP_STATUS.unactive])
-  @IsNumber()
-  membershipStatus?: MEMBERSHIP_STATUS;
 
   @Expose()
   @IsOptional()

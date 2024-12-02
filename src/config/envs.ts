@@ -11,4 +11,7 @@ export const envs = {
   dbSync: env.get('DB_SYNC').required(true).asBool(),
   dbDropSchema: env.get('DB_DROP_SCHEMA').required(true).asBool(),
   jwtSeed: env.get('JWT_SEED').required(true).asString(),
+  redisHost: env.get('REDIS_HOST').required(true).asString(),
+  redisPort: env.get('REDIS_PORT').required(true).asPortNumber(),
+  mongoUrl: env.get('MONGO_URL').required(true).asString(),
 };

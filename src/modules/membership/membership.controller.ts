@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -13,14 +14,16 @@ import { IdParamDto } from '../../common/dto/idParamDto';
 import { MembershipService } from './membership.service';
 import { CreateMembershipDto } from './dto/create-membership.dto';
 import { UpdateMembershipDto } from './dto/update-membership.dto';
+import { SearchMembershipDto } from './dto/search-membership.dto';
 
 @Controller('membership')
 export class MembershipController {
   constructor(private readonly membershipService: MembershipService) {}
 
   @Get()
-  findAll() {
-    return this.membershipService.findAll();
+  find(@Query() searchParams: SearchMembershipDto) {
+    console.log(searchParams);
+    return this.membershipService.find(searchParams);
   }
 
   @Post()

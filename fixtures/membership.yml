@@ -5,19 +5,23 @@ items:
     price: 35
     duration: 1
     branch: "@branch1"
+    active: 1
   membership2:
     name: "2 month"
     price: 60
     duration: 2
     branch: "@branch1"
+    active: 1
   membership3:
     name: "1 month"
     price: 30
     duration: 1
     branch: "@branch2"
+    active: 1
   membership4:
     name: "2 month"
     price: 50
     duration: 2
     branch: "@branch2"
+    active: 1
 

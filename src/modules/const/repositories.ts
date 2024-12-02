@@ -4,4 +4,5 @@ export const REPOSITORIES = {
   branch_hours: 'BRANCH_HOURS_REPOSITORY',
   member: 'MEMBER_REPOSITORY',
   membership: 'MEMBERSHIP_REPOSITORY',
+  memberMembership: 'MEMBER_MEMBERSHIP_REPOSITORY',
 };

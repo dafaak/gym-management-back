@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Gym } from '../gym/gym.entity';
 import { Branch } from '../branch/branch.entity';
+import { MEMBERSHIP_STATUS } from '../../common/const/membership-status';
 
 @Entity('membership')
 export class Membership {
@@ -32,6 +33,12 @@ export class Membership {
     nullable: true,
   })
   details?: string;
+
+  @Column({
+    type: 'tinyint',
+    nullable: false,
+  })
+  active: MEMBERSHIP_STATUS;
 
   @ManyToOne(() => Branch, (branch) => branch.memberships, {
     onDelete: 'CASCADE',

@@ -1,19 +1,34 @@
-version: "3.9"
-
 services:
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    ports:
+      - "6379:6379"
+  mongo:
+    image: mongo:6.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dev_user
+      MONGO_INITDB_ROOT_PASSWORD: dev_pass
+      MONGO_INITDB_DATABASE: gym-management
+    volumes:
+#      - ./mongo:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
   mysql:
     image: mysql:8.0
     container_name: mysql-gym-db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root_password  # Cambia esta contraseña
-      MYSQL_DATABASE: db         # Cambia el nombre de tu base de datos
-      MYSQL_USER: dev_user                 # Cambia el nombre de usuario
-      MYSQL_PASSWORD: dev_pass         # Cambia la contraseña del usuario
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: db
+      MYSQL_USER: dev_user
+      MYSQL_PASSWORD: dev_pass
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql  # Persistencia de datos
+      - mysql_data:/var/lib/mysql
 
 
 volumes:

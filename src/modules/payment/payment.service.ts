@@ -51,8 +51,8 @@ export class PaymentService {
 
       if (searchParams.startDate && searchParams.endDate) {
         filter['payment_date'] = {
-          $gte: searchParams.startDate,
-          $lte: searchParams.endDate,
+          $gte: new Date(`${searchParams.startDate} 00:00:00`),
+          $lte: new Date(`${searchParams.endDate} 23:59:59`),
         };
       }
 

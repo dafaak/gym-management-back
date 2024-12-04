@@ -19,6 +19,7 @@ import {
 import { dataSourceMySql } from '../../config/database/datasource-mysql';
 
 import { Membership } from '../membership/membership.entity';
+import { Member } from '../member/member.entity';
 
 @Injectable()
 export class PaymentAndMembershipService {
@@ -47,18 +48,38 @@ export class PaymentAndMembershipService {
       })) as Membership;
 
       if (!membershipFound) {
-        throw new BadRequestException('MEMBERSHIP NOT FOUND');
+        throw new BadRequestException({
+          message: 'MEMBERSHIP NOT FOUND',
+          status: false,
+        });
+      }
+
+      const memberFound = (await queryRunner.manager.findOne(Member, {
+        where: {
+          id: createDto.member_id,
+        },
+      })) as Member;
+
+      if (!memberFound) {
+        throw new BadRequestException({
+          message: 'MEMBER NOT FOUND',
+          status: false,
+        });
       }
 
       // consultar si el miembro ya tiene una membresia
-      const memberMembershipFound = (await queryRunner.manager.findOne(
+      const qb = queryRunner.manager.createQueryBuilder(
         MemberMembership,
-        {
-          where: {
-            member: createDto.member_id,
-          },
-        },
-      )) as MemberMembership;
+        'memberMembership',
+      );
+
+      qb.innerJoinAndSelect(
+        'memberMembership.member',
+        'member',
+        'member.id=:memberId',
+        { memberId: createDto.member_id },
+      );
+      const memberMembershipFound = await qb.getOne();
 
       if (memberMembershipFound) {
         const isMembershipActive = validateMembershipStatus(
@@ -117,11 +138,23 @@ export class PaymentAndMembershipService {
         // crear el registro
         const startDate = dayjs();
         const endDate = startDate.add(membershipFound.duration, 'month');
-        await queryRunner.manager.create(MemberMembership, {
-          startDate: startDate.format('YYYY-MM-DD'),
-          endDate: endDate.format('YYYY-MM-DD'),
-          member: createDto.member_id,
-        });
+
+        const memberMembershipCreated = await queryRunner.manager.save(
+          MemberMembership,
+          {
+            startDate: startDate.format('YYYY-MM-DD'),
+            endDate: endDate.format('YYYY-MM-DD'),
+            member: createDto.member_id,
+          },
+        );
+
+        await queryRunner.manager.update(
+          Member,
+          { id: createDto.member_id },
+          {
+            memberMembership: memberMembershipCreated.id,
+          },
+        );
       }
 
       await this.paymentService.create(createDto);

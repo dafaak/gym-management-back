@@ -57,6 +57,12 @@ export class Member {
   })
   email?: string;
 
+  // @Column({
+  //   type: 'text',
+  //   nullable: true,
+  // })
+  // faceVector?: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

@@ -30,11 +30,6 @@ export class CreatePaymentDto {
 
   @Expose()
   @IsNotEmpty()
-  @IsDateString()
-  payment_date: Date;
-
-  @Expose()
-  @IsNotEmpty()
   @IsNumber()
   amount_paid: number;
 

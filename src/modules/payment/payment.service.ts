@@ -23,7 +23,10 @@ export class PaymentService {
 
   async create(createDto: CreatePaymentDto): Promise<ResponseMessageInterface> {
     try {
-      const createdPayment = new this.paymentModel(createDto);
+      const createdPayment = new this.paymentModel({
+        ...createDto,
+        payment_date: new Date(),
+      });
       await createdPayment.save();
       return { message: 'PAYMENT CREATED', status: true };
     } catch (e) {

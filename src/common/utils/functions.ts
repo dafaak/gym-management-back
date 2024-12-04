@@ -15,3 +15,15 @@ export function isDateInRange(
 export function addMonthsToDate(date: dayjs.Dayjs, months: number) {
   return date.add(months, 'month');
 }
+
+export function validateMembershipStatus(
+  membershipStartDate: string,
+  membershipEndDate: string,
+) {
+  const startDate = dayjs(membershipStartDate);
+
+  const endDate = dayjs(membershipEndDate);
+
+  const today = dayjs();
+  return isDateInRange(startDate, endDate, today);
+}

@@ -6,6 +6,8 @@ import { MembershipModule } from '../membership/membership.module';
 import { MemberMembershipModule } from '../member-membership/member-membership.module';
 import { PaymentModule } from '../payment/payment.module';
 import { PaymentAndMembershipModule } from '../payment-and-membership/payment-and-membership.module';
+import { AttendanceModule } from '../attendance/attendance.module';
+import { AuthModule } from '../auth/auth.module';
 
 export const MODULES = [
   GymModule,
@@ -16,4 +18,6 @@ export const MODULES = [
   MemberMembershipModule,
   PaymentModule,
   PaymentAndMembershipModule,
+  AttendanceModule,
+  AuthModule,
 ];

@@ -14,7 +14,7 @@ export class MemberService extends CommonService<
 > {
   constructor(
     @Inject(REPOSITORIES.member)
-    private memberRepository: Repository<Member>,
+    public readonly memberRepository: Repository<Member>,
   ) {
     super(memberRepository);
   }

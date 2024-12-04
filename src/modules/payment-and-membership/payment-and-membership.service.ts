@@ -6,14 +6,16 @@ import {
   Logger,
 } from '@nestjs/common';
 import { CreatePaymentDto } from '../payment/dto/create-payment.dto';
-import { MemberMembershipService } from '../member-membership/member-membership.service';
 import { PaymentService } from '../payment/payment.service';
 import { MembershipService } from '../membership/membership.service';
 import { MEMBERSHIP_STATUS } from '../../common/const/membership-status';
 import { MemberMembership } from '../member-membership/member-membership.entity';
 import * as dayjs from 'dayjs';
 import { ResponseMessageInterface } from '../../common/interface/response-message.interface';
-import { addMonthsToDate, isDateInRange } from '../../common/utils/functions';
+import {
+  addMonthsToDate,
+  validateMembershipStatus,
+} from '../../common/utils/functions';
 import { dataSourceMySql } from '../../config/database/datasource-mysql';
 
 import { Membership } from '../membership/membership.entity';
@@ -21,15 +23,15 @@ import { Membership } from '../membership/membership.entity';
 @Injectable()
 export class PaymentAndMembershipService {
   protected readonly logger = new Logger();
+  protected readonly dataSource = dataSourceMySql;
 
   constructor(
     private readonly membershipService: MembershipService,
-    private readonly memberMembershipService: MemberMembershipService,
     private readonly paymentService: PaymentService,
   ) {}
 
   async create(createDto: CreatePaymentDto): Promise<ResponseMessageInterface> {
-    const queryRunner = dataSourceMySql.createQueryRunner();
+    const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -59,8 +61,9 @@ export class PaymentAndMembershipService {
       )) as MemberMembership;
 
       if (memberMembershipFound) {
-        const isMembershipActive = this.isMembershipActive(
-          memberMembershipFound,
+        const isMembershipActive = validateMembershipStatus(
+          memberMembershipFound.startDate,
+          memberMembershipFound.endDate,
         );
 
         // si la membresia aun esta vigente o es un pago atrasado
@@ -140,14 +143,5 @@ export class PaymentAndMembershipService {
     } finally {
       await queryRunner.release();
     }
-  }
-
-  isMembershipActive(memberMembership: MemberMembership) {
-    const startDate = dayjs(memberMembership.startDate);
-
-    const endDate = dayjs(memberMembership.endDate);
-
-    const today = dayjs();
-    return isDateInRange(startDate, endDate, today);
   }
 }

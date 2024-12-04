@@ -24,7 +24,11 @@ export class MemberController {
   }
 
   @Post()
-  create(@Body() createDto: CreateMemberDto) {
+  // @UseInterceptors(FileInterceptor('memberPicture'))
+  create(
+    @Body() createDto: CreateMemberDto,
+    // @UploadedFile() file: Express.Multer.File,
+  ) {
     return this.memberService.create(createDto);
   }
 

@@ -6,6 +6,7 @@ import { UpdateMembershipDto } from './dto/update-membership.dto';
 import { REPOSITORIES } from '../const/repositories';
 import { Repository } from 'typeorm';
 import { SearchMembershipDto } from './dto/search-membership.dto';
+import { Branch } from '../branch/branch.entity';
 
 @Injectable()
 export class MembershipService extends CommonService<
@@ -18,6 +19,13 @@ export class MembershipService extends CommonService<
     private membershipRepository: Repository<Membership>,
   ) {
     super(membershipRepository);
+  }
+
+  async findById(id: number): Promise<Membership | null> {
+    if (!id) {
+      return null;
+    }
+    return await this.repository.findOne({ where: { id } });
   }
 
   async findByParams(searchParams: SearchMembershipDto) {

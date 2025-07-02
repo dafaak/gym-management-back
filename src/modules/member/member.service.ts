@@ -5,6 +5,7 @@ import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { REPOSITORIES } from '../const/repositories';
 import { Repository } from 'typeorm';
+import { Branch } from '../branch/branch.entity';
 
 @Injectable()
 export class MemberService extends CommonService<
@@ -17,5 +18,12 @@ export class MemberService extends CommonService<
     public readonly memberRepository: Repository<Member>,
   ) {
     super(memberRepository);
+  }
+
+  async findById(id: number): Promise<Member | null> {
+    if (!id) {
+      return null;
+    }
+    return await this.repository.findOne({ where: { id } });
   }
 }

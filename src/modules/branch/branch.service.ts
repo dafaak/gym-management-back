@@ -20,6 +20,9 @@ export class BranchService extends CommonService<
   }
 
   async findById(id: number): Promise<Branch | null> {
+    if (!id) {
+      return null;
+    }
     return await this.repository.findOne({ where: { id } });
   }
 

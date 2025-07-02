@@ -19,7 +19,7 @@ export class CreatePaymentDto {
   member_id: number;
 
   @Expose()
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   membership_id: number;
 
@@ -34,7 +34,7 @@ export class CreatePaymentDto {
   amount_paid: number;
 
   @Expose()
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   discount_applied: number;
 

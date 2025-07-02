@@ -3,10 +3,12 @@ items:
   branch1:
     address: "main street sw.123"
     phone: "+593909878676"
-    email: "test1@mail.com"
+    email: "branch1@mail.com"
     gym: "@gym1"
+    alias: "branch1_alias"
   branch2:
     address: "main street sw.123"
     phone: "+593938475844"
-    email: "test2@mail.com"
+    email: "branch2@mail.com"
     gym: "@gym1"
+    alias: "branch2_alias"

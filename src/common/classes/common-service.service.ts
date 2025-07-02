@@ -15,7 +15,9 @@ export abstract class CommonService<
 > {
   protected readonly logger = new Logger();
 
-  constructor(protected readonly repository: Repository<TEntity>) {}
+  constructor(protected readonly repository: Repository<TEntity>) {
+  }
+
 
   async findAll(): Promise<TEntity[]> {
     return this.repository.find();

@@ -5,10 +5,12 @@ import { DatabaseModule } from '../../config/database/database.module';
 import { ATTENDANCE_PROVIDERS } from './attendance.providers';
 import { MemberMembershipModule } from '../member-membership/member-membership.module';
 import { MemberModule } from '../member/member.module';
+import { BranchModule } from '../branch/branch.module';
 
 @Module({
-  imports: [DatabaseModule, MemberMembershipModule, MemberModule],
+  imports: [DatabaseModule, MemberMembershipModule, MemberModule, BranchModule],
   providers: [AttendanceService, ...ATTENDANCE_PROVIDERS],
   controllers: [AttendanceController],
 })
-export class AttendanceModule {}
+export class AttendanceModule {
+}

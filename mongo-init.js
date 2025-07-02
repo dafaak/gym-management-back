@@ -2,7 +2,7 @@ db = db.getSiblingDB('gym-management'); // Seleccionar la base de datos gym-mana
 
 db.createUser({
   user: 'admin',
-  pwd: 'password123', // Cambia la contraseña aquí
+  pwd: 'password123',
   roles: [{ role: 'readWrite', db: 'gym-management' }],
 });
 

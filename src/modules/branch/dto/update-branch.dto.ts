@@ -10,11 +10,18 @@ import {
 
 export class UpdateBranchDto {
   @Expose()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MaxLength(100)
   @MinLength(2)
   address?: string;
+
+  @Expose()
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  @MinLength(2)
+  alias?: string;
 
   @Expose()
   @IsNotEmpty()

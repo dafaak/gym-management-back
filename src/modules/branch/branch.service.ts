@@ -14,8 +14,13 @@ export class BranchService extends CommonService<
 > {
   constructor(
     @Inject(REPOSITORIES.branch)
-    private branchRepository: Repository<Branch>,
+    public readonly branchRepository: Repository<Branch>,
   ) {
     super(branchRepository);
   }
+
+  async findById(id: number): Promise<Branch | null> {
+    return await this.repository.findOne({ where: { id } });
+  }
+
 }

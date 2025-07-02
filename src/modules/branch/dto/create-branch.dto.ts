@@ -19,6 +19,13 @@ export class CreateBranchDto {
   @Expose()
   @IsNotEmpty()
   @IsString()
+  @MaxLength(100)
+  @MinLength(2)
+  alias: string;
+
+  @Expose()
+  @IsNotEmpty()
+  @IsString()
   @MaxLength(20)
   @MinLength(7)
   phone: string;

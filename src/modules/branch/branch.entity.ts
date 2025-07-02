@@ -20,6 +20,13 @@ export class Branch {
     length: '100',
     nullable: false,
   })
+  alias: string;
+
+  @Column({
+    type: 'varchar',
+    length: '100',
+    nullable: false,
+  })
   address: string;
 
   @Column({

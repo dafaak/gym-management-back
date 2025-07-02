@@ -16,7 +16,6 @@ export class AttendanceController {
 
   @Get()
   async findByParams(@Query() searchParams: SearchAttendanceDto) {
-    console.log(searchParams);
     return this.attendanceService.findByParams(searchParams);
   }
 }

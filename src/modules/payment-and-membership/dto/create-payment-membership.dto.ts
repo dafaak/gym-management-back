@@ -10,5 +10,5 @@ export class CreatePaymentMembershipDto {
 
   @Expose()
   @IsNotEmpty()
-  payment: CreatePaymentDto;
+  payment: CreatePaymentDto ;
 }

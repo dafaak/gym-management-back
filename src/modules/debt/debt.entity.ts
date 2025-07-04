@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToOne } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToOne, JoinColumn } from 'typeorm';
 import { Member } from '../member/member.entity';
 
 @Entity('debt')
@@ -18,7 +18,8 @@ export class Debt {
   @UpdateDateColumn({})
   last_updated: Date;
 
-  @OneToOne(() => Member, (member) => member.memberDebt)
+  @OneToOne(() => Member, (member) => member.debt, { nullable: false })
+  @JoinColumn()
   member: Member | number;
 
 }

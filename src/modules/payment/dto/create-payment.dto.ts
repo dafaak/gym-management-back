@@ -29,6 +29,11 @@ export class CreatePaymentDto {
   late_payment: boolean;
 
   @Expose()
+  @IsOptional()
+  @IsNumber()
+  total_amount: number;
+
+  @Expose()
   @IsNotEmpty()
   @IsNumber()
   amount_paid: number;
@@ -42,4 +47,9 @@ export class CreatePaymentDto {
   @IsOptional()
   @IsString()
   details?: string;
+
+  @Expose()
+  @IsNotEmpty()
+  @Type(() => Boolean)
+  is_debt_payment: boolean;
 }

@@ -25,59 +25,82 @@ export class PaymentService {
   ) {
   }
 
-  async createMembershipPayment(createDto: CreatePaymentDto): Promise<ResponseMessageInterface> {
+  async createPayment(createDto: CreatePaymentDto): Promise<ResponseMessageInterface> {
     try {
       const branchFound = await this.branchService.findById(createDto.branch_id);
       const memberFound = await this.memberService.findById(createDto.member_id);
-      const membershipFound = await this.membershipService.findById(createDto.membership_id);
-      const debtFound = await this.debtService.findById(createDto.member_id);
+      const debtFound = await this.debtService.findByMemberId(createDto.member_id);
 
-      if (membershipFound && membershipFound.active === MEMBERSHIP_STATUS.inactive) {
-        throw new HttpException(
-          { message: 'MEMBERSHIP IS INACTIVE', status: false },
-          HttpStatus.BAD_REQUEST,
-        );
+      console.log({ debtFound });
+
+      if (createDto.is_debt_payment && !debtFound) throw new HttpException({
+        message: 'DEBT NOT FOUND',
+        status: false,
+      }, HttpStatus.BAD_REQUEST);
+
+      if (!createDto.is_debt_payment && createDto.total_amount <= 0) throw new HttpException({
+        message: 'TOTAL AMOUNT MUST BE GREATER THAN ZERO',
+        status: false,
+      }, HttpStatus.BAD_REQUEST);
+
+      let total_amount = createDto.total_amount;
+      let total_amount_with_discount = createDto.total_amount - createDto.discount_applied;
+      let details = '';
+
+      if (createDto.membership_id) {
+
+        const membershipFound = await this.membershipService.findById(createDto.membership_id);
+
+        if (membershipFound && membershipFound.active === MEMBERSHIP_STATUS.inactive) {
+
+          throw new HttpException(
+            { message: 'MEMBERSHIP IS INACTIVE', status: false },
+            HttpStatus.BAD_REQUEST,
+          );
+
+        }
+
+        if (membershipFound && membershipFound.price) {
+          total_amount = membershipFound.price;
+        }
+
+        details = membershipFound.name;
       }
 
+
       if (!branchFound || !memberFound) {
+
         throw new HttpException(
           { message: 'BRANCH, MEMBER NOT FOUND', status: false },
           HttpStatus.BAD_REQUEST,
         );
+
       }
 
       let debt = 0;
-      let total_amount = 0;
 
-      if (membershipFound && membershipFound.price) {
-        total_amount = membershipFound.price;
-      }
-
-      if (createDto.discount_applied > 0) {
-        total_amount = total_amount  - createDto.discount_applied;
-      }
-
-      if (total_amount > createDto.amount_paid) {
+      if (total_amount_with_discount > createDto.amount_paid) {
         debt = total_amount - createDto.amount_paid;
       }
 
-      if (debtFound && debtFound.total_debt > 0) {
-        debt = debtFound.total_debt + debt;
+      if (debtFound && Number(debtFound.total_debt) > 0) {
+        debt = Number(debtFound.total_debt) + debt;
       }
 
-      console.log(debt);
+      if (createDto.is_debt_payment) {
+        debt = debt - createDto.amount_paid;
+      }
 
       if (debt > 0) {
         if (!debtFound) {
           await this.debtService.create({
-            member_id: createDto.member_id,
+            member: memberFound.id,
             total_debt: debt,
           });
         }
 
         if (debtFound) {
           await this.debtService.update(debtFound.id, {
-            member_id: createDto.member_id,
             total_debt: debt,
           });
         }
@@ -88,14 +111,17 @@ export class PaymentService {
       const createdPayment = new this.paymentModel({
         member_name: memberFound.firstName + ' ' + memberFound.lastName,
         branch_name: branchFound.alias,
-        membership_name: membershipFound.name,
+        details,
         ...createDto,
         payment_date: new Date(),
-        previous_debt: debtFound ? debtFound.total_debt : 0,
+        previous_debt: debtFound ? Number(debtFound.total_debt) : 0,
         new_debt: debt,
       });
+
       await createdPayment.save();
+
       return { message: 'PAYMENT CREATED', status: true };
+
     } catch (e) {
       this.logger.error(
         `Error in create method: payload = ${JSON.stringify(createDto)}`,
@@ -108,38 +134,38 @@ export class PaymentService {
     }
   }
 
-  async createPayment(createDto: CreatePaymentDto): Promise<ResponseMessageInterface> {
-    const branchFound = await this.branchService.findById(createDto.branch_id);
-    const memberFound = await this.memberService.findById(createDto.member_id);
-    const debtFound = await this.debtService.findById(createDto.member_id);
-
-    if (!branchFound || !memberFound) {
-      throw new HttpException(
-        { message: 'BRANCH OR MEMBER NOT FOUND', status: false },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-    let previousDebt = 0;
-    let newDebt = 0;
-    if (debtFound && debtFound.total_debt > 0) {
-      previousDebt = debtFound.total_debt;
-      newDebt = previousDebt - createDto.amount_paid;
-    }
-
-
-    const createdPayment = new this.paymentModel({
-      member_name: memberFound.firstName + ' ' + memberFound.lastName,
-      branch_name: branchFound.alias,
-      previous_debt: previousDebt,
-      new_debt: newDebt,
-      ...createDto,
-      payment_date: new Date(),
-    });
-    await createdPayment.save();
-    return { message: 'PAYMENT CREATED', status: true };
-
-
-  }
+  // async createPayment(createDto: CreatePaymentDto): Promise<ResponseMessageInterface> {
+  //   const branchFound = await this.branchService.findById(createDto.branch_id);
+  //   const memberFound = await this.memberService.findById(createDto.member_id);
+  //   const debtFound = await this.debtService.findById(createDto.member_id);
+  //
+  //   if (!branchFound || !memberFound) {
+  //     throw new HttpException(
+  //       { message: 'BRANCH OR MEMBER NOT FOUND', status: false },
+  //       HttpStatus.BAD_REQUEST,
+  //     );
+  //   }
+  //   let previousDebt = 0;
+  //   let newDebt = 0;
+  //   if (debtFound && debtFound.total_debt > 0) {
+  //     previousDebt = debtFound.total_debt;
+  //     newDebt = previousDebt - createDto.amount_paid;
+  //   }
+  //
+  //
+  //   const createdPayment = new this.paymentModel({
+  //     member_name: memberFound.firstName + ' ' + memberFound.lastName,
+  //     branch_name: branchFound.alias,
+  //     previous_debt: previousDebt,
+  //     new_debt: newDebt,
+  //     ...createDto,
+  //     payment_date: new Date(),
+  //   });
+  //   await createdPayment.save();
+  //   return { message: 'PAYMENT CREATED', status: true };
+  //
+  //
+  // }
 
   async getPaymentsByMemberAndDateRange(searchParams: SearchPaymentDto) {
     try {

@@ -10,6 +10,7 @@ import { MemberService } from '../member/member.service';
 import { MembershipService } from '../membership/membership.service';
 import { DebtService } from '../debt/debt.service';
 import { MEMBERSHIP_STATUS } from '../../common/const/membership-status';
+import { CreateDebtPaymentDto } from './dto/create-debt-payment.dto';
 
 @Injectable()
 export class PaymentService {
@@ -25,23 +26,12 @@ export class PaymentService {
   ) {
   }
 
-  async createPayment(createDto: CreatePaymentDto): Promise<ResponseMessageInterface> {
+  async createMembershipPayment(createDto: CreatePaymentDto): Promise<ResponseMessageInterface> {
     try {
       const branchFound = await this.branchService.findById(createDto.branch_id);
       const memberFound = await this.memberService.findById(createDto.member_id);
       const debtFound = await this.debtService.findByMemberId(createDto.member_id);
 
-      console.log({ debtFound });
-
-      if (createDto.is_debt_payment && !debtFound) throw new HttpException({
-        message: 'DEBT NOT FOUND',
-        status: false,
-      }, HttpStatus.BAD_REQUEST);
-
-      if (!createDto.is_debt_payment && createDto.total_amount <= 0) throw new HttpException({
-        message: 'TOTAL AMOUNT MUST BE GREATER THAN ZERO',
-        status: false,
-      }, HttpStatus.BAD_REQUEST);
 
       let total_amount = createDto.total_amount;
       let total_amount_with_discount = createDto.total_amount - createDto.discount_applied;
@@ -87,24 +77,17 @@ export class PaymentService {
         debt = Number(debtFound.total_debt) + debt;
       }
 
-      if (createDto.is_debt_payment) {
-        debt = debt - createDto.amount_paid;
+      if (!debtFound && debt > 0) {
+        await this.debtService.create({
+          member: memberFound.id,
+          total_debt: debt,
+        });
       }
 
-      if (debt > 0) {
-        if (!debtFound) {
-          await this.debtService.create({
-            member: memberFound.id,
-            total_debt: debt,
-          });
-        }
-
-        if (debtFound) {
-          await this.debtService.update(debtFound.id, {
-            total_debt: debt,
-          });
-        }
-
+      if (debtFound) {
+        await this.debtService.update(debtFound.id, {
+          total_debt: debt,
+        });
       }
 
 
@@ -134,38 +117,59 @@ export class PaymentService {
     }
   }
 
-  // async createPayment(createDto: CreatePaymentDto): Promise<ResponseMessageInterface> {
-  //   const branchFound = await this.branchService.findById(createDto.branch_id);
-  //   const memberFound = await this.memberService.findById(createDto.member_id);
-  //   const debtFound = await this.debtService.findById(createDto.member_id);
-  //
-  //   if (!branchFound || !memberFound) {
-  //     throw new HttpException(
-  //       { message: 'BRANCH OR MEMBER NOT FOUND', status: false },
-  //       HttpStatus.BAD_REQUEST,
-  //     );
-  //   }
-  //   let previousDebt = 0;
-  //   let newDebt = 0;
-  //   if (debtFound && debtFound.total_debt > 0) {
-  //     previousDebt = debtFound.total_debt;
-  //     newDebt = previousDebt - createDto.amount_paid;
-  //   }
-  //
-  //
-  //   const createdPayment = new this.paymentModel({
-  //     member_name: memberFound.firstName + ' ' + memberFound.lastName,
-  //     branch_name: branchFound.alias,
-  //     previous_debt: previousDebt,
-  //     new_debt: newDebt,
-  //     ...createDto,
-  //     payment_date: new Date(),
-  //   });
-  //   await createdPayment.save();
-  //   return { message: 'PAYMENT CREATED', status: true };
-  //
-  //
-  // }
+  async createDebtPayment(createDto: CreateDebtPaymentDto): Promise<ResponseMessageInterface> {
+    const branchFound = await this.branchService.findById(createDto.branch_id);
+    const memberFound = await this.memberService.findById(createDto.member_id);
+    const debtFound = await this.debtService.findByMemberId(createDto.member_id);
+
+    if (!debtFound) throw new HttpException({ message: 'MEMBER HAS NO DEBT', status: false }, HttpStatus.BAD_REQUEST);
+
+
+    if (debtFound && debtFound.total_debt <= 0) throw new HttpException({
+      message: 'MEMBER HAS NO DEBT',
+      status: false,
+    }, HttpStatus.BAD_REQUEST);
+
+    let details = 'Debt payment';
+
+    if (!branchFound || !memberFound) {
+
+      throw new HttpException(
+        { message: 'BRANCH, MEMBER NOT FOUND', status: false },
+        HttpStatus.BAD_REQUEST,
+      );
+
+    }
+
+    if (debtFound.total_debt < createDto.amount_paid) throw new HttpException({
+      message: 'PAYMENT GREATER THAN TOTAL DEBT',
+      status: false,
+    }, HttpStatus.BAD_REQUEST);
+
+    let debt = Number(debtFound.total_debt) - createDto.amount_paid;
+
+
+    await this.debtService.update(debtFound.id, {
+      total_debt: debt,
+    });
+
+
+    const createdPayment = new this.paymentModel({
+      member_name: memberFound.firstName + ' ' + memberFound.lastName,
+      branch_name: branchFound.alias,
+      details,
+      ...createDto,
+      payment_date: new Date(),
+      previous_debt: Number(debtFound.total_debt) ?? 0,
+      new_debt: debt,
+    });
+
+    await createdPayment.save();
+
+    return { message: 'PAYMENT CREATED', status: true };
+
+
+  }
 
   async getPaymentsByMemberAndDateRange(searchParams: SearchPaymentDto) {
     try {

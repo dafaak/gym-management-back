@@ -2,6 +2,8 @@ import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { SearchPaymentDto } from './dto/search-payment.dto';
+import { CreateDebtDto } from '../debt/dto/create-debt.dto';
+import { CreateDebtPaymentDto } from './dto/create-debt-payment.dto';
 
 @Controller('payment')
 export class PaymentController {
@@ -14,8 +16,8 @@ export class PaymentController {
   }
 
   @Post()
-  create(@Body() createDto: CreatePaymentDto) {
-    return this.paymentService.createPayment(createDto);
+  create(@Body() createDto: CreateDebtPaymentDto) {
+    return this.paymentService.createDebtPayment(createDto);
   }
 
   // @Put(':id')

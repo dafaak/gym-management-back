@@ -1,6 +1,5 @@
 import { Expose, Type } from 'class-transformer';
 import {
-  IsDateString,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -19,7 +18,7 @@ export class CreatePaymentDto {
   member_id: number;
 
   @Expose()
-  @IsOptional()
+  @IsNotEmpty()
   @IsNumber()
   membership_id: number;
 
@@ -47,9 +46,4 @@ export class CreatePaymentDto {
   @IsOptional()
   @IsString()
   details?: string;
-
-  @Expose()
-  @IsNotEmpty()
-  @Type(() => Boolean)
-  is_debt_payment: boolean;
 }

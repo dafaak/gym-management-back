@@ -5,4 +5,5 @@ export const REPOSITORIES = {
   member: 'MEMBER_REPOSITORY',
   membership: 'MEMBERSHIP_REPOSITORY',
   memberMembership: 'MEMBER_MEMBERSHIP_REPOSITORY',
+  debt: 'DEBT_REPOSITORY',
 };

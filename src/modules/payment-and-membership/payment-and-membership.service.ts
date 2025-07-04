@@ -157,7 +157,7 @@ export class PaymentAndMembershipService {
         );
       }
 
-      await this.paymentService.create(createDto);
+      await this.paymentService.createMembershipPayment(createDto);
 
       await queryRunner.commitTransaction();
 

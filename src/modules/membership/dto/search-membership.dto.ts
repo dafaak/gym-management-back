@@ -8,7 +8,7 @@ export class SearchMembershipDto extends SearchDto {
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  @IsIn([MEMBERSHIP_STATUS.unactive, MEMBERSHIP_STATUS.active])
+  @IsIn([MEMBERSHIP_STATUS.inactive, MEMBERSHIP_STATUS.active])
   active?: MEMBERSHIP_STATUS;
 
   @Expose()

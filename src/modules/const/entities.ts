@@ -4,6 +4,7 @@ import { BranchHours } from '../branch-hours/branch-hours.entity';
 import { Member } from '../member/member.entity';
 import { Membership } from '../membership/membership.entity';
 import { MemberMembership } from '../member-membership/member-membership.entity';
+import { Debt } from '../debt/debt.entity';
 
 export const ENTITIES = [
   Gym,
@@ -12,4 +13,5 @@ export const ENTITIES = [
   Member,
   Membership,
   MemberMembership,
+  Debt
 ];

@@ -12,4 +12,6 @@ export const PaymentSchema = new mongoose.Schema({
   amount_paid: Number,
   discount_applied: Number,
   details: String,
+  previous_debt: Number,
+  new_debt: Number,
 });

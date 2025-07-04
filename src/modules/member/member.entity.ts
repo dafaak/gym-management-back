@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { Branch } from '../branch/branch.entity';
 import { MemberMembership } from '../member-membership/member-membership.entity';
+import { Debt } from '../debt/debt.entity';
 
 @Entity('member')
 export class Member {
@@ -72,6 +73,10 @@ export class Member {
   @OneToOne(() => MemberMembership)
   @JoinColumn()
   memberMembership: MemberMembership | number;
+
+  @OneToOne(() => Debt)
+  @JoinColumn()
+  memberDebt: Debt | number;
 
   @ManyToOne(() => Branch, (branch) => branch.members, {
     onDelete: 'CASCADE',

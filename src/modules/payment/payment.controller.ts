@@ -5,7 +5,8 @@ import { SearchPaymentDto } from './dto/search-payment.dto';
 
 @Controller('payment')
 export class PaymentController {
-  constructor(private readonly paymentService: PaymentService) {}
+  constructor(private readonly paymentService: PaymentService) {
+  }
 
   @Get()
   findByParams(@Query() searchParams: SearchPaymentDto) {
@@ -14,7 +15,7 @@ export class PaymentController {
 
   @Post()
   create(@Body() createDto: CreatePaymentDto) {
-    return this.paymentService.create(createDto);
+    return this.paymentService.createPayment(createDto);
   }
 
   // @Put(':id')

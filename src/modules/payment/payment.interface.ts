@@ -12,4 +12,6 @@ export interface Payment extends Document {
   readonly amount_paid: number;
   readonly discount_applied: number;
   readonly details: string;
+  readonly previous_debt: number;
+  readonly new_debt: number;
 }

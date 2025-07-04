@@ -30,42 +30,33 @@ export class PaymentService {
     try {
       const branchFound = await this.branchService.findById(createDto.branch_id);
       const memberFound = await this.memberService.findById(createDto.member_id);
+      const membershipFound = await this.membershipService.findById(createDto.membership_id);
       const debtFound = await this.debtService.findByMemberId(createDto.member_id);
+
+      if (!branchFound || !memberFound) {
+        throw new HttpException(
+          { message: 'BRANCH, MEMBER NOT FOUND', status: false },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      if (membershipFound && membershipFound.active === MEMBERSHIP_STATUS.inactive) {
+        throw new HttpException(
+          { message: 'MEMBERSHIP IS INACTIVE', status: false },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
 
 
       let total_amount = createDto.total_amount;
       let total_amount_with_discount = createDto.total_amount - createDto.discount_applied;
       let details = '';
 
-      if (createDto.membership_id) {
-
-        const membershipFound = await this.membershipService.findById(createDto.membership_id);
-
-        if (membershipFound && membershipFound.active === MEMBERSHIP_STATUS.inactive) {
-
-          throw new HttpException(
-            { message: 'MEMBERSHIP IS INACTIVE', status: false },
-            HttpStatus.BAD_REQUEST,
-          );
-
-        }
-
-        if (membershipFound && membershipFound.price) {
-          total_amount = membershipFound.price;
-        }
-
-        details = membershipFound.name;
+      if (membershipFound && membershipFound.price) {
+        total_amount = Number(membershipFound.price);
       }
 
-
-      if (!branchFound || !memberFound) {
-
-        throw new HttpException(
-          { message: 'BRANCH, MEMBER NOT FOUND', status: false },
-          HttpStatus.BAD_REQUEST,
-        );
-
-      }
+      details = membershipFound.name;
 
       let debt = 0;
 
@@ -89,7 +80,6 @@ export class PaymentService {
           total_debt: debt,
         });
       }
-
 
       const createdPayment = new this.paymentModel({
         member_name: memberFound.firstName + ' ' + memberFound.lastName,
@@ -124,7 +114,6 @@ export class PaymentService {
 
     if (!debtFound) throw new HttpException({ message: 'MEMBER HAS NO DEBT', status: false }, HttpStatus.BAD_REQUEST);
 
-
     if (debtFound && debtFound.total_debt <= 0) throw new HttpException({
       message: 'MEMBER HAS NO DEBT',
       status: false,
@@ -133,12 +122,10 @@ export class PaymentService {
     let details = 'Debt payment';
 
     if (!branchFound || !memberFound) {
-
       throw new HttpException(
         { message: 'BRANCH, MEMBER NOT FOUND', status: false },
         HttpStatus.BAD_REQUEST,
       );
-
     }
 
     if (debtFound.total_debt < createDto.amount_paid) throw new HttpException({
@@ -147,7 +134,6 @@ export class PaymentService {
     }, HttpStatus.BAD_REQUEST);
 
     let debt = Number(debtFound.total_debt) - createDto.amount_paid;
-
 
     await this.debtService.update(debtFound.id, {
       total_debt: debt,
@@ -167,7 +153,6 @@ export class PaymentService {
     await createdPayment.save();
 
     return { message: 'PAYMENT CREATED', status: true };
-
 
   }
 

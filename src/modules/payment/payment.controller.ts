@@ -20,17 +20,4 @@ export class PaymentController {
     return this.paymentService.createDebtPayment(createDto);
   }
 
-  // @Put(':id')
-  // @UsePipes(ValidationPipe)
-  // update(
-  //   @Param() params: IdParamDto,
-  //   @Body() updateDto: UpdateMemberMembershipDto,
-  // ) {
-  //   return this.paymentService.update(params.id, updateDto);
-  // }
-  //
-  // @Delete(':id')
-  // delete(@Param() params: IdParamDto) {
-  //   return this.paymentService.delete(params.id);
-  // }
 }

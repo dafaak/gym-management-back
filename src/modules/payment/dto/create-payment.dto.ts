@@ -28,7 +28,7 @@ export class CreatePaymentDto {
   late_payment: boolean;
 
   @Expose()
-  @IsOptional()
+  @IsNotEmpty()
   @IsNumber()
   total_amount: number;
 

@@ -4,6 +4,9 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { envs } from '../../config/envs';
 import { QRCodeService } from './qrcode.service';
+import { DatabaseModule } from '../../config/database/database.module';
+import { AUTH_PROVIDERS } from './auth.providers';
+import { BcryptAdapter } from '../../config/adapters/bcrypt.adapter';
 
 @Module({
   imports: [
@@ -11,9 +14,11 @@ import { QRCodeService } from './qrcode.service';
       secret: envs.jwtSeed,
       signOptions: { expiresIn: 2678400 },
     }),
+    DatabaseModule,
   ],
-  providers: [AuthService, QRCodeService],
+  providers: [...AUTH_PROVIDERS, AuthService, QRCodeService, BcryptAdapter],
   controllers: [AuthController],
   exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule {
+}

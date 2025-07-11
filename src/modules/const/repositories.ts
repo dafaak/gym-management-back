@@ -6,4 +6,5 @@ export const REPOSITORIES = {
   membership: 'MEMBERSHIP_REPOSITORY',
   memberMembership: 'MEMBER_MEMBERSHIP_REPOSITORY',
   debt: 'DEBT_REPOSITORY',
+  user: 'USER_REPOSITORY',
 };

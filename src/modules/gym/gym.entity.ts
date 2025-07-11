@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Branch } from '../branch/branch.entity';
+import { User } from '../auth/user.entity';
 
 @Entity('gym')
 export class Gym {
@@ -31,4 +32,11 @@ export class Gym {
     onDelete: 'CASCADE',
   })
   branches: Branch[];
+
+  @OneToMany(() => User, (user) => user.gym, {
+    onDelete: 'CASCADE',
+  })
+  users: User[];
+
+
 }

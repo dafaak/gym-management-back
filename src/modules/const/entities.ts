@@ -5,6 +5,7 @@ import { Member } from '../member/member.entity';
 import { Membership } from '../membership/membership.entity';
 import { MemberMembership } from '../member-membership/member-membership.entity';
 import { Debt } from '../debt/debt.entity';
+import { User } from '../auth/user.entity';
 
 export const ENTITIES = [
   Gym,
@@ -13,5 +14,6 @@ export const ENTITIES = [
   Member,
   Membership,
   MemberMembership,
-  Debt
+  Debt,
+  User
 ];

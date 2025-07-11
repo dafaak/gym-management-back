@@ -1,0 +1,22 @@
+entity: User
+items:
+  user1:
+    firstName: "Israel"
+    lastName: "Perez"
+    userName: "iperezgymadmin"
+    phone: "0979334500"
+    roles: "gym-admin"
+    gym: "@gym1"
+  user2:
+    firstName: "Jose"
+    lastName: "Espinosa"
+    userName: "jespinosatrainer"
+    phone: "0979334500"
+    roles: "gym-trainer"
+    branch: "@branch1"
+  user3:
+    firstName: "Super"
+    lastName: "Admin"
+    userName: "superadmin"
+    phone: "0979334500"
+    roles: "super-admin"

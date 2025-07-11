@@ -9,6 +9,7 @@ import { Gym } from '../gym/gym.entity';
 import { BranchHours } from '../branch-hours/branch-hours.entity';
 import { Member } from '../member/member.entity';
 import { Membership } from '../membership/membership.entity';
+import { User } from '../auth/user.entity';
 
 @Entity('branch')
 export class Branch {
@@ -64,6 +65,11 @@ export class Branch {
     onDelete: 'CASCADE',
   })
   members: Member[];
+
+  @OneToMany(() => User, (users) => users.branch, {
+    onDelete: 'CASCADE',
+  })
+  users: User[];
 
   @ManyToOne(() => Gym, (gym) => gym.branches, {
     onDelete: 'CASCADE',
